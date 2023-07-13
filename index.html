@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cuestionario de Barbie</title>
+<style>
+  body {
+    font-family: "Chamberí", Arial, sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h1, h2 {
+    font-family: "Barbie", cursive;
+    font-size: 32px;
+    margin-top: 0;
+    color: #ff69b4;
+  }
+
+  p {
+    font-size: 18px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #ff69b4;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #89E2DE;
+  }
+
+  .question {
+    text-align: left;
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #ff69b4;
+  }
+
+  .options {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .options li {
+    margin: 10px;
+  }
+
+  .correct {
+    background-color: #bff0d4;
+  }
+
+  .incorrect {
+    background-color: #ffcdd2;
+  }
+
+  .result {
+    font-weight: bold;
+    margin-top: 20px;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  video {
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+  }
+</style>
+</head>
+<body>
+  <!-- Gif al principio -->
+  <div id="gifInicio" class="container">
+    <img src="rutagif_inicio.gif" alt="Gif de Barbie" width="400" height="300">
+  </div>
+
+  <!-- Página de inicio -->
+  <div id="inicio" class="container">
+    <h1>Bienvenido al Cuestionario de Barbie</h1>
+    <p>¿Estás listo para poner a prueba tus conocimientos sobre Barbie?</p>
+    <button onclick="comenzarQuizz()">Comenzar Quizz</button>
+  </div>
+
+  <!-- Página de encuesta -->
+  <div id="encuesta" class="container hidden">
+    <h2 id="questionNumber"></h2>
+    <p id="question"></p>
+    <ul id="options" class="options"></ul>
+    <button onclick="mostrarSiguientePregunta()" id="nextButton" disabled>Siguiente</button>
+  </div>
+
+  <!-- Página de resultados -->
+  <div id="resultados" class="container hidden">
+    <h2>Resultados</h2>
+    <p id="puntuacion"></p>
+  </div>
+
+  <!-- Gif al final -->
+  <div id="gifFinal" class="container hidden">
+    <img src="rutagif_final.gif" alt="Gif de Barbie" width="400" height="300">
+  </div>
+
+  <audio id="audio" src="ruta_audio.mp3" loop></audio>
+
+  <script> 
+  window.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('audio').play();
+    audioEnabled = true;
+  });
+  
+  const preguntas = [
+  {
+          pregunta: "¿Cuál es el nombre completo de Barbie?",
+          opciones: [
+            "Barbara Millicent Roberts",
+            "Barbara Helen Roberts",
+            "Barbara Olivia Smith",
+            "Barbara Grace Johnson"
+          ],
+          respuestaCorrecta: 0
+        },
+        {
+          pregunta: "¿En qué año fue lanzada la primera muñeca Barbie?",
+          opciones: ["1955", "1957", "1959", "1961"],
+          respuestaCorrecta: 2
+        },
+        {
+          pregunta: "¿Cuál es la profesión más icónica de Barbie?",
+          opciones: ["Doctora", "Astronauta", "Maestra", "Modelo"],
+          respuestaCorrecta: 1
+        },
+        {
+          pregunta: "¿Quién es el creador de Barbie?",
+          opciones: [
+            "Ruth Handler",
+            "Mattel",
+            "Sara Handler",
+            "Ken Carson"
+          ],
+          respuestaCorrecta: 0
+        },
+        {
+          pregunta: "¿Cuál no es una de las hermana de Barbie?",
+          opciones: [
+            "Katie",
+            "Skipper",
+            "Stacie",
+            "Chelsea"
+          ],
+          respuestaCorrecta: 0
+        },
+        {
+          pregunta: "¿Cuál fue la primera película de Barbie lanzada directamente en formato DVD?",
+          opciones: [
+            "Barbie en el Cascanueces",
+            "Barbie Rapunzel",
+            "Barbie y la Puerta Secreta",
+            "Barbie en la Princesa y la Costurera"
+          ],
+          respuestaCorrecta: 0
+        },
+        {
+          pregunta: "¿Cuál fue la primera profesión de Barbie?",
+          opciones: [
+            "Astronauta",
+            "Maestra",
+            "Doctora",
+            "Modelo"
+          ],
+          respuestaCorrecta: 3
+        },
+        {
+          pregunta: "¿En qué ciudad ficticia vive Barbie?",
+          opciones: [
+            "Barbieville",
+            "Barbieland",
+            "Barbieton",
+            "Barbielandia"
+          ],
+          respuestaCorrecta: 1
+        },
+        {
+          pregunta: "¿Cuál es el nombre del novio de Barbie?",
+          opciones: [
+            "Ken",
+            "Tom",
+            "David",
+            "Mike"
+          ],
+          respuestaCorrecta: 0
+        },
+        {
+          pregunta: "¿Cuál es la película más reciente de Barbie hasta la fecha?",
+          opciones: [
+            "Barbie en la Isla de los Delfines",
+            "Barbie y las Tres Mosqueteras",
+            "Barbie y sus Hermanas en una Aventura de Perritos",
+            "Barbie Dreamtopia"
+          ],
+          respuestaCorrecta: 2
+        }
+        // Agrega más preguntas aquí...
+  ];
+
+  let preguntaActual = 0;
+  let puntuacion = 0;
+  let audioEnabled = false;
+
+  function comenzarQuizz() {
+    document.getElementById('gifInicio').classList.add('hidden');
+    document.getElementById('inicio').classList.add('hidden');
+    mostrarSiguientePregunta();
+    document.getElementById('encuesta').classList.remove('hidden');
+    if (audioEnabled) {
+      document.getElementById('audio').play();
+    }
+  }
+
+  function mostrarSiguientePregunta() {
+    const encuesta = document.getElementById('encuesta');
+    const questionNumber = document.getElementById('questionNumber');
+    const question = document.getElementById('question');
+    const options = document.getElementById('options');
+    const nextButton = document.getElementById('nextButton');
+
+    nextButton.disabled = true;
+
+    if (preguntaActual < preguntas.length) {
+      questionNumber.textContent = "Pregunta " + (preguntaActual + 1);
+      question.textContent = preguntas[preguntaActual].pregunta;
+      options.innerHTML = '';
+
+      for (let i = 0; i < preguntas[preguntaActual].opciones.length; i++) {
+        const option = document.createElement('li');
+        const button = document.createElement('button');
+        button.textContent = preguntas[preguntaActual].opciones[i];
+        button.addEventListener('click', function() {
+          evaluarRespuesta(i);
+          nextButton.disabled = false;
+        });
+        option.appendChild(button);
+        options.appendChild(option);
+      }
+
+      preguntaActual++;
+    } else {
+      mostrarResultados();
+      encuesta.classList.add('hidden');
+      document.getElementById('resultados').classList.remove('hidden');
+      document.getElementById('gifFinal').classList.remove('hidden');
+      if (audioEnabled) {
+        document.getElementById('audio').pause();
+      }
+    }
+  }
+
+  function evaluarRespuesta(opcionSeleccionada) {
+    const respuestaCorrecta = preguntas[preguntaActual - 1].respuestaCorrecta;
+
+    if (opcionSeleccionada === respuestaCorrecta) {
+      puntuacion++;
+      event.target.classList.add('correct');
+      playSound("correctSound");
+    } else {
+      event.target.classList.add('incorrect');
+      playSound("incorrectSound");
+    }
+
+    document.querySelectorAll('#options button').forEach(function(button) {
+      button.disabled = true;
+    });
+  }
+
+  function mostrarResultados() {
+    const puntuacionElement = document.getElementById('puntuacion');
+    puntuacionElement.textContent = "Tu puntuación final es: " + puntuacion + " de " + preguntas.length;
+    alert("¡Cuestionario finalizado!");
+    alert("Tu puntuación final es: " + puntuacion + " de " + preguntas.length);
+  }
+
+  function playSound(soundId) {
+    // Agrega aquí el código para reproducir los sonidos
+  }
+  </script>
+</body>
+</html>
